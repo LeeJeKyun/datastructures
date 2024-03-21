@@ -57,7 +57,7 @@ public class LinkedList_addTail<E> {
      * 아닌 경우 : node.next=head;(head는 현재 추가 전 처음 노드의 포인터 따라서 node.next=firstNode와 같다)
      * head=node
      * 시간복잡도: O(1)
-     * @param data
+     * @param data - 리스트에 추가할 데이터
      */
     public void addFirst(E data) {
         Node<E> node = new Node<E>(data);
@@ -74,11 +74,18 @@ public class LinkedList_addTail<E> {
 
     /**
      * addLast: 노드를 마지막 위치에 추가할 때(tail을 추가한 상태)
-     * tail.next에 새로운 노드를 대입하여 추가가 가능하다.
      *
+     * Empty: head==null로 예외처리
+     * Signle: 동일 로직으로 처리가능.
+     * Beginning: 불가능.
+     * End: 전제가 마지막임.
+     * Middle: 불가능.
+     *
+     * 추가할 노드 먼저 생성
+     * tail.next에 새로운 노드를 대입하여 추가가 가능하다.
      * 시간복잡도: 0(1)
      *
-     * @param data
+     * @param data - 리스트에 추가할 데이터
      */
     public void addLast(E data) {
         Node<E> node = new Node<E>(data);
@@ -92,6 +99,22 @@ public class LinkedList_addTail<E> {
         tail = node;
         currentSize++;
     }
+
+    /**
+     * removeFirst: 자료구조의 첫 노드를 삭제한다.
+     *
+     * Empty: head==null로 예외처리
+     * Signle: head==tail로 예외처리
+     * Beginning: 전제로 깔려있음.
+     * End: 불가능.
+     * Middle: 불가능.
+     *
+     * 경계조건을 처리해준 후 head포인터를 head.next를 가르키게 만든다
+     * -> 첫 노드를 가르키는 포인터가 없으므로 Garbage Collection 된다.
+     * 그 후 CurrentSize를 반환해줌.
+     * 시간복잡도: 0(1)
+     * @return - 삭제된 데이터를 반환해준다.
+     */
     public E removeFirst() {
         if(head ==null ) return null;
         E tmp = head.data;
@@ -100,6 +123,26 @@ public class LinkedList_addTail<E> {
         currentSize--;
         return tmp;
     }
+
+    /**
+     * removeLast: 자료구조의 마지막 노드를 삭제한다.
+     *
+     * Empty: head==null로 예외처리
+     * Signle: head==tail로 예외처리
+     * Beginning: 불가능.
+     * End: 전제이다.
+     * Middle: 불가능.
+     *
+     * 경계조건을 처리해준 후 current포인터, previous포인터를 이용한다.
+     * current포인터가 tail포인터가 되기전까지 한 노드씩 포인터를 미뤄준다.
+     * -> current포인터가 tail포인터가 되며 반복문 마무리.
+     * previous포인터(끝에서 2번째노드)의 next를 null로 만들어준다.
+     * -> 마지막 노드를 가리키는 포인터가 없으므로 GC된다.
+     * tail포인터를 previous포인터로 변환해주고 currentSize를 줄여준다.
+     * current포인터에 있는 삭제될 데이터를 반환해준다.
+     * 시간복잡도: 0(1)
+     * @return - 삭제된 데이터를 반환해준다.
+     */
     public E removeLast() {
         if(head == null) return null;
         if(head == tail) return removeFirst();
@@ -113,6 +156,25 @@ public class LinkedList_addTail<E> {
         currentSize--;
         return current.data;
     }
+
+    /**
+     * remove: 자료구조의 노드에 포함된 데이터를 찾아 해당 데이터를 갖고있는 노드를 삭제한다.
+     *
+     * Empty: current!=null로 예외처리
+     * Signle: current == head로 예외처리 -> 위에서 생성한 removeList() 메서드 활용
+     * Beginning: current == head로 예외처리 -> 위에서 생성한 removeList() 메서드 활용
+     * End: current == tail로 예외처리 -> 위에서 생성한 removeLast() 메서드 활용
+     * Middle: 로직의대상
+     *
+     * 경계조건을 처리해준 후 current포인터, previous포인터를 이용한다.
+     * current포인터가 null이 아닌동안(null이 된다는건 current포인터가 마지막 노드를 포인트하기 전까지를 의미함)
+     * search 데이터와 current포인터의 데이터를 비교하여 같을경우를 찾아낸다.
+     * 두 데이터가 같을 경우 currentSize -1, previous포인터의 next를 current포인터의 next로 포인트하여
+     * current포인터가 리스트에서 빠지게 만들어준다.
+     * 그 후 current포인터의 데이터를 반환해준다.
+     * 시간복잡도: 0(n)
+     * @return - 삭제된 데이터를 반환해준다.
+     */
     public E remove(E search) {
         Node<E> current = head, previous = null;
         while(current != null) {
@@ -129,6 +191,25 @@ public class LinkedList_addTail<E> {
         return null;
     }
 
+    /**
+     * contain: 자료구조에 데이터가 있는지 확인한다
+     *
+     * Empty: 필요x
+     * Signle: 필요x
+     * Beginning: 필요x
+     * End: 필요x
+     * Middle: 필요x
+     *
+     * current포인터를 이용한다.
+     * current포인터가 null이 아닌동안(null이 된다는건 current포인터가 마지막 노드를 포인트하기 전까지를 의미함)
+     * search 데이터와 current포인터의 데이터를 비교하여 같을경우를 찾아낸다.
+     * 두 데이터가 같을 경우 true를 반환한다.
+     * 같지 않을 경우 currrent 포인터를 한 노드씩 이동시킨다.
+     * current포인터가 null인 경우 == 마지막 노드까지 검색한 경우
+     * false를 반환한다.
+     * 시간복잡도: 0(n)
+     * @return - 삭제된 데이터를 반환해준다.
+     */
     public boolean contains(E search) {
         Node<E> current = head;
         while(current != null){
