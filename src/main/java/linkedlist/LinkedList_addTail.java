@@ -51,16 +51,22 @@ public class LinkedList_addTail<E> {
 
     /**
      * addFirst: 노드를 첫위치에 추가할 때
-     * 추가될 노드를 먼저 생성
-     * 경계조건 -> 자료구조가 비어있는 경우 : head == null를 통해 알아낼 수 있음
-     * head=node, tail=node후 사이즈 + 1
-     * 아닌 경우 : node.next=head;(head는 현재 추가 전 처음 노드의 포인터 따라서 node.next=firstNode와 같다)
-     * head=node
+     *
+     * Empty: head==null로 예외처리
+     * Signle: 동일 로직으로 처리가능
+     * Beginning: 전제가 시작점임.
+     * End: 불가능.
+     * Middle: 불가능.
+     *
+     * 추가할 노드를 먼저 생성
+     * node.next포인터에 head를 대입함으로써 새로 생성된 노드의 다음 노드가 head노드이게 만듬.
+     * head포인터에 node를 대입함으로서 새로 생성된 노드가 첫 노드이게 만듬.
+     * 이후 현재 사이즈 + 1
      * 시간복잡도: O(1)
      * @param data - 리스트에 추가할 데이터
      */
     public void addFirst(E data) {
-        Node<E> node = new Node<E>(data);
+        Node<E> node = new Node<>(data);
         if(head == null) {
             head=node;
             tail=node;
