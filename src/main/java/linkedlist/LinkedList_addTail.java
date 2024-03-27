@@ -1,5 +1,9 @@
 package linkedlist;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+
 /**
  * 포인터를 사용하여 여러 개의 노드를 연결하는 자료구조 - 연결 리스트
  * 기본 구성 요소는 노드이다. head는 리스트의 첫 번째 노드를 가리킨다.
@@ -7,7 +11,7 @@ package linkedlist;
  * 연결 리스트의 길이가 매우 길 경우 계속 head 뒤에 next를 붙일 수는 없다. 따라서 임시 포인터를 사용하여 탐색하는 방법을 사용한다.
  * @param <E>
  */
-public class LinkedList_addTail<E> {
+public class LinkedList_addTail<E> implements ListI<E>, Iterable<E> {
 
     /**
      * 노드를 내부 클래스로 선언하여 외부의 접근을 막는다. 자료구조가 깨어지지 않게 해줌.
@@ -25,6 +29,30 @@ public class LinkedList_addTail<E> {
             next=null;
         }
     }
+
+    public Iterator<E> iterator() {
+        return new IteratorHelper();
+    }
+
+
+    class IteratorHelper implements Iterator<E> {
+
+        Node<E> index;
+        public IteratorHelper() {
+            index = head;
+        }
+        public boolean hasNext() {
+            return (index != null);
+        }
+
+        public E next() {
+            if(!hasNext()) throw new NoSuchElementException();
+            E val = index.data;
+            index = index.next;
+            return val;
+        }
+    }
+
     /**
      * head라는 노드와 현재 사이즈를 필드로 가지고 있다.
      * 현재 사이즈를 매번 연산할수도 있지만, O(n)의 연산이므로 효율적이지 못하다.
@@ -224,4 +252,45 @@ public class LinkedList_addTail<E> {
         }
         return false;
     }
+    /**
+     * peekFirst: 첫 노드의 데이터를 반환한다.
+     *
+     * Empty: head==null 예외처리
+     * Signle: 필요x
+     * Beginning: 필요x
+     * End: 필요x
+     * Middle: 필요x
+     *
+     * head==null 조건을 이용해 비어있는 경우 null을 반환한다.
+     * 나머지 경우엔 head.data를 반환한다.
+     * 시간복잡도: 0(1)
+     * @return - null 또는 첫 노드의 데이터
+     */
+    public E peekFirst() {
+        if(head == null) return null;
+
+        return head.data;
+    }
+
+    /**
+     * peekLast: 마지막 노드의 데이터를 반환한다.
+     *
+     * Empty: head==null 예외처리
+     * Signle: 필요x
+     * Beginning: 필요x
+     * End: 필요x
+     * Middle: 필요x
+     *
+     * head==null 조건을 이용해 비어있는 경우 null을 반환한다.
+     * 나머지 경우엔 tail.data를 반환한다.
+     * 시간복잡도: 0(1)
+     * @return - null 또는 첫 노드의 데이터
+     */
+    public E peekLast() {
+        if(tail == null) return null;
+
+        return tail.data;
+    }
+
+
 }
