@@ -33,6 +33,16 @@ public class Hash<K, V> {
     double maxLoadFactor;
     LinkedList<HashElement<K,V>>[] harray;
 
+    /**
+     * 생성자
+     * tableSize를 매개변수로 전달받아 tableSize크기의 LinkedList-Array를 만든다.
+     * LoadFactor = HashElement의 개수 / 전체 Array의 길이
+     * maxLoadFactor는 보통 0.6~0.7사이로 설정한다.
+     * numElements는 요소(HashElement)의 갯수이다. 생성자이므로 0으로 초기화한다.
+     * 배열의 인덱스마다 LinkedList를 초기화한다.(인스턴스 생성한다.)
+     *
+     * @param tableSize
+     */
     public Hash(int tableSize) {
         this.tableSize = tableSize;
         maxLoadFactor = 0.75;
@@ -44,20 +54,35 @@ public class Hash<K, V> {
         }
     }
 
+    /**
+     * key, value값을 받아서 추가하는 매서드이다.
+     * loadFactor를 계산하여 maxLoadFactor보다 작을 경우만 적용한다.
+     * 만약 loadFactor가 maxLoadFactor를 넘어섰을 경우 사이즈를 2배로 늘린다.
+     * @param key
+     * @param value
+     * @return
+     */
     public boolean add(K key, V value) {
         if(loadFactor() > maxLoadFactor)
             resize(tableSize*2);
 
         HashElement<K,V> he = new HashElement<>(key, value);
-        int hashval = key.hashCode();
-        hashval &= 0x7fffffff;
-        hashval %= tableSize;
+        int hashval = key.hashCode();   //hashCode() 메서드를 이용해 int값으로 변경한다.
+        hashval &= 0x7fffffff;  //&연산을 이용해 int값을 양수로 변경해준다.
+        hashval %= tableSize;   //모듈러 연산을 통해 int정수를 array Index로 변경해준다.
 
-        harray[hashval].add(he);
-        numElements++;
+        harray[hashval].add(he);    //위 연산의 결과인 array Index의 인스턴스(LinkedList)에 방금 생성한 HashElement를 추가한다.
+        numElements++;  //전체 요소의 크기를 1 증가시킨다.
         return true;
     }
 
+    /**
+     * 입력된 key값의 hash코드를 찾아낸다.
+     * hash
+     * @param key
+     * @param value
+     * @return
+     */
     public boolean remove(K key, V value) {
         int hashval = key.hashCode();
         hashval &= 0x7fffffff;
